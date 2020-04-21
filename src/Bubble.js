@@ -1,8 +1,8 @@
-export function Bubble() {
-
-    this.bubbleMap = new Map();
-
-    this.addNode = function(key,child){
+class Bubble{
+    constructor(){
+        this.bubbleMap = new Map();
+    }
+    addNode (key,child){
         if (! this.bubbleMap.has(key)){
             newNode = new Node(key)
         }
@@ -32,38 +32,29 @@ export function Bubble() {
 
 
 
-export function Node(key) {
-    this.key = key;
-    this.parent = new Set()
-    this.child = new Set()
-
-
-    this.addParent = function(parent){
-        this.parent.add(parent);
-
-
+class Node{
+    constructor(key){
+        this.key = key;
+        this.parent = new Set()
+        this.child = new Set()
     }
-    this.addChild = function(child){
+
+    addParent(parent){
+        this.parent.add(parent);
+    }
+    addChild(child){
         this.child.add(child);
     }
-
-    this.getParent = function(){
+    getKey(){
+        return this.key;
+    }
+    getParent(){
         return this.parent;
     }
 
-    this.getChild = function(){
+    getChild(){
         return this.child;
     }
 }
 
-
-
-// main
-const googleTrends = require('google-trends-api');
-googleTrends.relatedTopics({keyword: 'Dead Pool'})
-.then((res) => {
-  console.log(res);
-})
-.catch((err) => {
-  console.log(err);
-})
+export default Bubble
