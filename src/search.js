@@ -10,10 +10,10 @@ const rl = readline.createInterface({
 rl.question('Search:', input_value => {
 
     pendinglist = [input_value]
-    Dic = new Set()
+    Dic = new Bubble()
     num = 0
     async function f(callback){
-        while( num<=100 && pendinglist.length != 0){
+        while( num<=1000 && pendinglist.length != 0){
             currvalue = pendinglist[0]
             pendinglist.shift()
         
@@ -21,10 +21,8 @@ rl.question('Search:', input_value => {
                 num = num + result.length
                 
                 pendinglist = pendinglist.concat(result)
-                result.forEach(element => {
-                    Dic.add(element)
+                Dic.addNode(currvalue,result)
 
-                });
                 resolve('done')
             }))
             await promise;
@@ -38,11 +36,6 @@ rl.question('Search:', input_value => {
     });
     
 })
-
-
-let newBubble = require('./Bubble.js').Bubble
-
-
 
 
 //search relative topics and queries
@@ -119,3 +112,61 @@ function queries_search(value,callback){
         console.log(err);
     })
 }
+
+
+
+class Node{
+    constructor(key){
+        this.key = key;
+        this.parent = new Set()
+        this.child = new Set()
+    }
+
+    addParent(parent){
+        this.parent.add(parent);
+    }
+    addChild(child){
+        this.child.add(child);
+    }
+    getKey(){
+        return this.key;
+    }
+    getParent(){
+        return this.parent;
+    }
+
+    getChild(){
+        return this.child;
+    }
+}
+
+
+class Bubble{
+    constructor(){
+        this.bubbleMap = new Map();
+    }
+    addNode (key,child){
+        if (! this.bubbleMap.has(key)){
+            var newNode = new Node(key)
+        }
+        else{
+            var newNode = this.bubbleMap.get(key)
+        }
+
+
+        for(let i = 0; i < child.length; i++){
+            
+            if( ! this.bubbleMap.has(child[i])){
+                var childNode = new Node(child[i])
+            }
+            else{
+                var childNode = this.bubbleMap.get(child[i])
+            }
+
+            childNode.addParent(newNode)
+            newNode.addChild(childNode)
+        }
+        this.bubbleMap.set(key,newNode)
+    }
+}
+
